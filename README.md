@@ -1,57 +1,30 @@
-# fire events
+# Integration tests
 
-> so our `AddInput` components does have two `props`, the first one an `array` and the second one is a `hook`(a function that we don't care about) . for the function we can use the `jest.fn()` function to just pass it a `mock function`
+> we want to test the interaction between the addInput component and the list below it. so when we type and add an input , the exact text shows there. for this we should make our test in the parent component.
 
 ```js
-import { render, screen } from "@testing-library/react";
-import AddInput from "../AddInput";
-
-const mockedSetTodo = jest.fn();
-
-describe("AddInput", () => {
+describe("Todo", () => {
   it("should render input element", async () => {
-    render(<AddInput todos={[]} setTodos={mockedSetTodo} />);
+    render(<MockTodo />); // make a MockTodo to avoid the browserRouter error
 
-    // here we select our element by the placeholder
-    const inputElement = screen.getByPlaceholderText(/Add a New task here.../i);
+    const inputElement = screen.getByPlaceholderText(/Add a new task here.../i); // select the input element
+    const buttonElement = screen.getByRole("button"); // select the button element
 
-    expect(inputElement).toBeInTheDocument();
+    // fire the change event
+    fireEvent.change(inputElement, {
+      target: { value: "Go Grocery Shopping" },
+    });
+
+    // fire the click event
+    fireEvent.click(buttonElement);
+
+    // select the div below the input by the text passed to the input (here when we fire the event the text Go Grocery ... must be placed in the div)
+    const divElement = screen.getByText(/Go Grocery Shopping/i);
+
+    // we are expecting that the divElement should be in the DOM
+    expect(divElement).toBeInTheDocument();
   });
 });
 ```
 
-> the second `test` that we want to make, is that when we fire the `change` event, the `input` value `changes` to whatever we have written
-
-```js
-import { render, screen, fireEvent } from "@testing-library/react";
-// we can fire events with the fireEvent function
-
-it("should be able to type in the input", async () => {
-  render(<AddInput todos={[]} setTodos={mockedSetTodo} />);
-
-  const inputElement = screen.getByPlaceholderText(/Add a New task here.../i);
-
-  // we can fire the change event like this. it takes two arguments. the first one is the element that we want to fire the event (in this case our inputElement) and the second one is our value that we want to pass to it
-  fireEvent.change(inputElement, {
-    target: { value: "Go Grocery Shopping" },
-  });
-
-  // here we are expecting that the value of the inputElement must be the value that we have given in the target property
-  expect(inputElement.value).toBe("Go Grocery Shopping");
-});
-```
-
-> our third `test` is that we want to `test` when we fire the `click` event , our `input` should be empty
-
-```js
-it("should have empty input when add button is clicked", async () => {
-  render(<AddInput todos={[]} setTodos={mockedSetTodo} />);
-
-  const inputElement = screen.getByPlaceholderText(/Add a New task here.../i);
-  const buttonElement = screen.getByRole("button"); // select the button by its role
-
-  fireEvent.click(buttonElement); // fire the click event
-
-  expect(inputElement.value).toBe(""); // assert that our input's value should be empty
-});
-```
+> rest of the tests inside the [Todo](./src/components/Todo/__test__/Todo.test.js) test file
