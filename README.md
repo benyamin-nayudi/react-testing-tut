@@ -1,75 +1,41 @@
-# react-testing-tut
+# screen has a bunch of other elements
 
-## benefits of testing our applications
+> `findAllBy...` actually finds us `elements` that matches that `condition` as an `array` but the `findBy...` is giving us `one` element.
 
-- Catch bugs
+we have different of selectors(90% of the times you will be using get over the rest)
 
-- Increase confidence in application
+- findAllBy...
+- findBy...
+- getAllBy...
+- getBy...
+- queryAllBy...
+- queryBy...
 
-- Speeds up QA time
+> the differences between these methods are as followed
+> ![differences](./photo_2022-02-12_08-28-44.jpg)
 
-- Can server as documentations
+- the `getBy` , `queryBy` & `findBy` get `one` element but the others get `array` of elements.
 
-## most common test
-
-- `Unit Tests` : test a piece of code or `component` in `isolation`
-
-- `Integration Tests` : test `interaction` between the components
-
-- `End to End (E2E) Tests` : what is the user is ultimately going to do.
+- the `all` versions works similarly to their `siblings` and if we know how the `get` versions work , we automatically will be familiar with the others.
 
 ---
 
-### a common structure of a test
+## priority
 
-1. first we have a test block and the first parameter `renders learn react link` is basically tell what we ultimately are going to test
+> in most of the times we can select an element by more that one method (getByText || getByTitle, etc.). here is the important point is that we want to mimic the user interactions as much as possible. so we should use the methods that accessible to every user
 
-> we can either choose `test` or `it` for writing the test
+### Accessible by Everyone
 
-```js
-test("renders learn react link", () => {});
+1. getByRole
+2. getByLabelText
+3. getByPlaceholderText
+4. getByText
 
-//or
+### Semantic Queries
 
-it("renders learn react link", () => {});
-```
+1. getByAltText
+2. getByTitle
 
-2. in the test block we should tell what component are we testing and we are going to tell this by rendering the component if the actual DOM.
+### Test ID
 
-```js
-import { render, screen } from "@testing-library/react";
-import App from "./App";
-
-it("renders learn react link", () => {
-  render(<App />);
-});
-```
-
-2. we want to find the component that we want to interact with
-
-```js
-import { render, screen } from "@testing-library/react";
-import App from "./App";
-
-it("renders learn react link", () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i); // here we find that element by screen
-});
-```
-
-> `screen` in fact looks at the `DOM` and provides us some `methods`
-
-3. interact with those `elements` and test the events (`click`, etc.)
-
-4. assert that the `results` are as expected . we do this with `expect()` function that is known by default by the `test` function (that uses `jest`)
-
-```js
-import { render, screen } from "@testing-library/react";
-import App from "./App";
-
-it("renders learn react link", () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInDocument();
-});
-```
+- getByTestId
