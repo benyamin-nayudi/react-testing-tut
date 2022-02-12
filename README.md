@@ -1,49 +1,57 @@
-# Describe blocks
+# fire events
 
-> we can use the `describe blocks` to group the common `tests`
+> so our `AddInput` components does have two `props`, the first one an `array` and the second one is a `hook`(a function that we don't care about) . for the function we can use the `jest.fn()` function to just pass it a `mock function`
 
 ```js
-describe("TodoFooter", () => {
-  it("should render the correct amount of incomplete tasks", async () => {
-    render(<MockTodoFooter numberOfIncompleteTasks={5} />);
+import { render, screen } from "@testing-library/react";
+import AddInput from "../AddInput";
 
-    const paragraphElement = screen.getByText(/5 tasks left/i);
+const mockedSetTodo = jest.fn();
 
-    expect(paragraphElement).toBeInTheDocument();
-  });
+describe("AddInput", () => {
+  it("should render input element", async () => {
+    render(<AddInput todos={[]} setTodos={mockedSetTodo} />);
 
-  it("should render 'task' when the number of incomplete tasks is one", async () => {
-    render(<MockTodoFooter numberOfIncompleteTasks={1} />);
+    // here we select our element by the placeholder
+    const inputElement = screen.getByPlaceholderText(/Add a New task here.../i);
 
-    const paragraphElement = screen.getByText(/1 task left/i);
-
-    expect(paragraphElement).toBeInTheDocument();
+    expect(inputElement).toBeInTheDocument();
   });
 });
 ```
 
-> we can also have some `describe blocks` (children describe blocks) inside a `describe block`
+> the second `test` that we want to make, is that when we fire the `change` event, the `input` value `changes` to whatever we have written
 
 ```js
-describe("TodoFooter", () => {
-  describe("functionality 1", () => {
-    it("should render the correct amount of incomplete tasks", async () => {
-      render(<MockTodoFooter numberOfIncompleteTasks={5} />);
+import { render, screen, fireEvent } from "@testing-library/react";
+// we can fire events with the fireEvent function
 
-      const paragraphElement = screen.getByText(/5 tasks left/i);
+it("should be able to type in the input", async () => {
+  render(<AddInput todos={[]} setTodos={mockedSetTodo} />);
 
-      expect(paragraphElement).toBeInTheDocument();
-    });
+  const inputElement = screen.getByPlaceholderText(/Add a New task here.../i);
+
+  // we can fire the change event like this. it takes two arguments. the first one is the element that we want to fire the event (in this case our inputElement) and the second one is our value that we want to pass to it
+  fireEvent.change(inputElement, {
+    target: { value: "Go Grocery Shopping" },
   });
 
-  describe("functionality 2", () => {
-    it("should render 'task' when the number of incomplete tasks is one", async () => {
-      render(<MockTodoFooter numberOfIncompleteTasks={1} />);
+  // here we are expecting that the value of the inputElement must be the value that we have given in the target property
+  expect(inputElement.value).toBe("Go Grocery Shopping");
+});
+```
 
-      const paragraphElement = screen.getByText(/1 task left/i);
+> our third `test` is that we want to `test` when we fire the `click` event , our `input` should be empty
 
-      expect(paragraphElement).toBeInTheDocument();
-    });
-  });
+```js
+it("should have empty input when add button is clicked", async () => {
+  render(<AddInput todos={[]} setTodos={mockedSetTodo} />);
+
+  const inputElement = screen.getByPlaceholderText(/Add a New task here.../i);
+  const buttonElement = screen.getByRole("button"); // select the button by its role
+
+  fireEvent.click(buttonElement); // fire the click event
+
+  expect(inputElement.value).toBe(""); // assert that our input's value should be empty
 });
 ```
