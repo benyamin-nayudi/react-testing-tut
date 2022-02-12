@@ -1,121 +1,54 @@
-# first test
+# Assertions
 
-> the first `test` is the `header` component (TODO). we want to `test` that if our component `renders` properly (right now the header is a `prop` given by its `parent` and in different `routes` is shows different `heading`)
-
-<!--  -->
-
-> to `test` a `module` or `component` (for example the `header` of our app) we should create a folder `__test__` and add a `Header.test.js` file in it to write our `test`.
+> in the `TodoFooter` component we have an `Error` says that `we can't use the Link outside of BrowserRouter`. that's because we are trying to `render` a `component` that has a `Link` tag (from `react-router-dom`) in isolation without wrapping it in the `BrowserRouter` tag. so we can make a `MockTodoFooter` and wrap it inside a `BrowserRouter` tag and return it and then `render` it by passing the desire `prop` and see if we can get the proper `result`.
 
 ```js
 import { render, screen } from "@testing-library/react";
-import Header from "../Header";
+import TodoFooter from "../TodoFooter";
+import { BrowserRouter } from "react-router-dom";
 
-it("should render same text passed into title prop", () => {
-  render(<Header title="My Header" />);
+const MockTodoFooter = ({ numberOfIncompleteTasks }) => {
+  return (
+    <BrowserRouter>
+      <TodoFooter numberOfIncompleteTasks={5} />
+    </BrowserRouter>
+  );
+};
 
-  const headingElement = screen.getByText(/My Header/i);
+it("should render the correct amount of incomplete tasks", async () => {
+  render(<MockTodoFooter numberOfIncompleteTasks={5} />);
 
-  expect(headingElement).toBeInTheDocument();
+  const paragraphElement = screen.getByText(/5 tasks left/i);
+
+  expect(paragraphElement).toBeInTheDocument();
 });
 ```
 
-## test the heading
+> there is so much `assertions` method we can use. you can use the `autoComplete` to see what is the different `methods` and `hover` of them to read their `actions`
 
-1. first `import` the `components` and `render` the `heading`
-2. pass the `prop` to the `component` and get the desired `text` from the `screen(DOM)`
-3. `expect` the result in the `Document`
+- `toBeVisible()` : used when a for exp the `opacity` of a text is `0`. it is there but not visible so it will `fail`.
+
+- `toContainHTML("p")` : expect that a specific element contains a specific `HTML` element
+
+- `toHaveTextContent('1 task left')` : we can get the `element` and `expect` that the element has the text `'1 task left'` in it
+
+> we can get the opposite of any method by adding the .not before the method
+
+- `expect(someElement).not.ToBeVisible()`
 
 ---
 
-> here if we make two heading in the Header component
+> we can get the textContent of the `element` and `assert` its content like this. (for input we can use .`value` instead of `.textContent`)
 
 ```js
-<>
-  <h1 title="Header" className="header">
-    {title}
-  </h1>
-  <h3 className="header">Cats</h3>
-</>
-```
+it("should render 'task' when the number of incomplete tasks is one", async () => {
+  render(<MockTodoFooter numberOfIncompleteTasks={1} />);
 
-> the second `test` will `fail` because there is two elements that matches the `getByRole` selector and it will `throw` an `error`. for this we can use the inner `text` of the `heading` tag and use it as an `identifier`.
-> remember that we always want to use a `condition` that matches `one` element
+  const paragraphElement = screen.getByText(/1 task left/i);
 
-```js
-it("should render same text passed into title prop1", () => {
-  render(<Header title="My Header" />);
-
-  const headingElement = screen.getByText(/My Header/i);
-
-  expect(headingElement).toBeInTheDocument();
-});
-
-it("should render  same text passed into title prop2", () => {
-  render(<Header title="My Header" />);
-
-  //   const headingElement = screen.getByRole("heading"); => will throw an error
-  const headingElement = screen.getByRole("heading", { name: "My Header" });
-
-  expect(headingElement).toBeInTheDocument();
-});
-
-// query by the title attribute of the header
-it("should render  same text passed into title prop3", async () => {
-  render(<Header title="My Header" />);
-
-  const headingElement = screen.getByTitle("Header");
-
-  expect(headingElement).toBeInTheDocument();
+  // here we are asserting that the element's content is '1 task left'
+  expect(paragraphElement.textContent).toBe("1 task left");
 });
 ```
 
-> we can specify a data-testid attribute and query the element byTestId
-
-```js
-// query by the data-testid of the header
-it("should render  same text passed into title prop4", async () => {
-  render(<Header title="My Header" />);
-
-  const headingElement = screen.getByTestId("header-1");
-
-  expect(headingElement).toBeInTheDocument();
-});
-```
-
-> the `findBy...` will fail if you don't provide `async-await` syntax for it
-
-```js
-it("should render same text passed into title prop4", async () => {
-  render(<Header title="my header" />);
-
-  const headingElement = await screen.findByText(/my header/i);
-
-  expect(headingElement).toBeInTheDocument();
-});
-```
-
-> the `queryBy...` selectors returns `null` if there was no `match` for it. so if we specify for exp `/dogs/i` condition for it, it will return `null`. also we can tell that we don't expect that the `dogs` text exists in our `screen`. we can do this:
-
-```js
-//* queryBy
-it("should render same text passed into title prop5", async () => {
-  render(<Header title="my header" />);
-
-  const headingElement = screen.queryByText(/dogs/i);
-
-  expect(headingElement).not.toBeInTheDocument(); // not here reverse the condition
-});
-```
-
-> the `getAllBy...` matches the condition and return us an `array`. so we can `test` like this:
-
-```js
-//* getAllBy
-it("should render same text passed into title prop6", async () => {
-  render(<Header title="my header" />);
-
-  const headingElements = screen.getAllByRole("heading");
-
-  expect(headingElements.length).toBe(2); // here we expect that the headingElements array's length is 2
-});
-```
+> ## we can make more that one `assertion` in one test.
