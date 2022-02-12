@@ -1,90 +1,65 @@
-import { render, screen } from '@testing-library/react';
-import Header from '../Header';
+import { render, screen } from "@testing-library/react";
+import Header from "../Header";
 
-describe("Header", () => {
-    it('should render same text passed into title prop', () => {
-        render(
-            <Header 
-              title="todo"
-            />
-        );
-        const h1Element = screen.getByText(/todo/i);
-        expect(h1Element).toBeInTheDocument();
-    });
-})
+// query by text of the header
+it("should render same text passed into title prop1", async () => {
+  render(<Header title="My Header" />);
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = screen.getByRole("heading");
-//     expect(h1Element).toBeInTheDocument();
-// });
+  const headingElement = screen.getByText(/My Header/i);
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = screen.getByRole("heading", { name: /todo/i });
-//     expect(h1Element).toBeInTheDocument();
-// });
+  expect(headingElement).toBeInTheDocument();
+});
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = screen.getByTitle("Header");
-//     expect(h1Element).toBeInTheDocument();
-// });
+//* query by the Role of the header and its inner text
+it("should render  same text passed into title prop2", async () => {
+  render(<Header title="My Header" />);
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h2Element = screen.getByTestId("header-2");
-//     expect(h2Element).toBeInTheDocument();
-// });
+  const headingElement = screen.getByRole("heading", { name: "My Header" });
 
-// // WITH FINDBY
+  expect(headingElement).toBeInTheDocument();
+});
 
-// it('should render same text passed into title prop', async () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = await screen.findByText(/todo/i);
-//     expect(h1Element).toBeInTheDocument();
-// });
+//* query by the title attribute of the header
+it("should render  same text passed into title prop3", async () => {
+  render(<Header title="My Header" />);
 
-// // WITH QUERYBY
+  const headingElement = screen.getByTitle("Header");
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Element = screen.queryByText(/dogs/i);
-//     expect(h1Element).not.toBeInTheDocument
-// });
+  expect(headingElement).toBeInTheDocument();
+});
 
-// // WITH GETALLBY
+//* query by the data-testid of the header
+it("should render  same text passed into title prop4", async () => {
+  render(<Header title="My Header" />);
 
-// it('should render same text passed into title prop', () => {
-//     render(
-//         <Header 
-//           title="todo"
-//         />
-//     );
-//     const h1Elements = screen.getAllByText(/todo/i);
-//     expect(h1Elements.length).toBe(1);
-// });
+  const headingElement = screen.getByTestId("header-1");
+
+  expect(headingElement).toBeInTheDocument();
+});
+
+//* findBy will fail if you don't provide async-await syntax for it
+it("should render same text passed into title prop4", async () => {
+  render(<Header title="my header" />);
+
+  const headingElement = await screen.findByText(/my header/i);
+
+  expect(headingElement).toBeInTheDocument();
+});
+
+//* queryBy
+it("should render same text passed into title prop5", async () => {
+  render(<Header title="my header" />);
+
+  const headingElement = screen.queryByText(/dogs/i);
+
+  expect(headingElement).not.toBeInTheDocument();
+});
+
+//* getAllBy
+it("should render same text passed into title prop6", async () => {
+  render(<Header title="my header" />);
+
+  const headingElements = screen.getAllByRole("heading");
+
+  expect(headingElements.length).toBe(2);
+});
