@@ -1,54 +1,49 @@
-# Assertions
+# Describe blocks
 
-> in the `TodoFooter` component we have an `Error` says that `we can't use the Link outside of BrowserRouter`. that's because we are trying to `render` a `component` that has a `Link` tag (from `react-router-dom`) in isolation without wrapping it in the `BrowserRouter` tag. so we can make a `MockTodoFooter` and wrap it inside a `BrowserRouter` tag and return it and then `render` it by passing the desire `prop` and see if we can get the proper `result`.
+> we can use the `describe blocks` to group the common `tests`
 
 ```js
-import { render, screen } from "@testing-library/react";
-import TodoFooter from "../TodoFooter";
-import { BrowserRouter } from "react-router-dom";
+describe("TodoFooter", () => {
+  it("should render the correct amount of incomplete tasks", async () => {
+    render(<MockTodoFooter numberOfIncompleteTasks={5} />);
 
-const MockTodoFooter = ({ numberOfIncompleteTasks }) => {
-  return (
-    <BrowserRouter>
-      <TodoFooter numberOfIncompleteTasks={5} />
-    </BrowserRouter>
-  );
-};
+    const paragraphElement = screen.getByText(/5 tasks left/i);
 
-it("should render the correct amount of incomplete tasks", async () => {
-  render(<MockTodoFooter numberOfIncompleteTasks={5} />);
+    expect(paragraphElement).toBeInTheDocument();
+  });
 
-  const paragraphElement = screen.getByText(/5 tasks left/i);
+  it("should render 'task' when the number of incomplete tasks is one", async () => {
+    render(<MockTodoFooter numberOfIncompleteTasks={1} />);
 
-  expect(paragraphElement).toBeInTheDocument();
+    const paragraphElement = screen.getByText(/1 task left/i);
+
+    expect(paragraphElement).toBeInTheDocument();
+  });
 });
 ```
 
-> there is so much `assertions` method we can use. you can use the `autoComplete` to see what is the different `methods` and `hover` of them to read their `actions`
-
-- `toBeVisible()` : used when a for exp the `opacity` of a text is `0`. it is there but not visible so it will `fail`.
-
-- `toContainHTML("p")` : expect that a specific element contains a specific `HTML` element
-
-- `toHaveTextContent('1 task left')` : we can get the `element` and `expect` that the element has the text `'1 task left'` in it
-
-> we can get the opposite of any method by adding the .not before the method
-
-- `expect(someElement).not.ToBeVisible()`
-
----
-
-> we can get the textContent of the `element` and `assert` its content like this. (for input we can use .`value` instead of `.textContent`)
+> we can also have some `describe blocks` (children describe blocks) inside a `describe block`
 
 ```js
-it("should render 'task' when the number of incomplete tasks is one", async () => {
-  render(<MockTodoFooter numberOfIncompleteTasks={1} />);
+describe("TodoFooter", () => {
+  describe("functionality 1", () => {
+    it("should render the correct amount of incomplete tasks", async () => {
+      render(<MockTodoFooter numberOfIncompleteTasks={5} />);
 
-  const paragraphElement = screen.getByText(/1 task left/i);
+      const paragraphElement = screen.getByText(/5 tasks left/i);
 
-  // here we are asserting that the element's content is '1 task left'
-  expect(paragraphElement.textContent).toBe("1 task left");
+      expect(paragraphElement).toBeInTheDocument();
+    });
+  });
+
+  describe("functionality 2", () => {
+    it("should render 'task' when the number of incomplete tasks is one", async () => {
+      render(<MockTodoFooter numberOfIncompleteTasks={1} />);
+
+      const paragraphElement = screen.getByText(/1 task left/i);
+
+      expect(paragraphElement).toBeInTheDocument();
+    });
+  });
 });
 ```
-
-> ## we can make more that one `assertion` in one test.

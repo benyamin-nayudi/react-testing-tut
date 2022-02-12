@@ -10,36 +10,47 @@ const MockTodoFooter = ({ numberOfIncompleteTasks }) => {
   );
 };
 
-it("should render the correct amount of incomplete tasks", async () => {
-  render(<MockTodoFooter numberOfIncompleteTasks={5} />);
+describe("TodoFooter", () => {
+  it("should render the correct amount of incomplete tasks", async () => {
+    render(<MockTodoFooter numberOfIncompleteTasks={5} />);
 
-  const paragraphElement = screen.getByText(/5 tasks left/i);
+    const paragraphElement = screen.getByText(/5 tasks left/i);
 
-  expect(paragraphElement).toBeInTheDocument();
+    expect(paragraphElement).toBeInTheDocument();
+  });
+
+  it("should render 'task' when the number of incomplete tasks is one", async () => {
+    render(<MockTodoFooter numberOfIncompleteTasks={1} />);
+
+    const paragraphElement = screen.getByText(/1 task left/i);
+
+    expect(paragraphElement).toBeInTheDocument();
+  });
 });
 
-it("should render 'task' when the number of incomplete tasks is one", async () => {
-  render(<MockTodoFooter numberOfIncompleteTasks={1} />);
+// // eslint-disable-next-line jest/no-identical-title
+// it("should render 'task' when the number of incomplete tasks is one", async () => {
+//   render(<MockTodoFooter numberOfIncompleteTasks={1} />);
 
-  const paragraphElement = screen.getByText(/1 task left/i);
+//   const paragraphElement = screen.getByText(/1 task left/i);
 
-  expect(paragraphElement).toBeInTheDocument();
-});
+//   expect(paragraphElement).toBeVisible();
+// });
 
-// eslint-disable-next-line jest/no-identical-title
-it("should render 'task' when the number of incomplete tasks is one", async () => {
-  render(<MockTodoFooter numberOfIncompleteTasks={1} />);
+// // eslint-disable-next-line jest/no-identical-title
+// it("should render 'task' when the number of incomplete tasks is one", async () => {
+//   render(<MockTodoFooter numberOfIncompleteTasks={1} />);
 
-  const paragraphElement = screen.getByText(/1 task left/i);
+//   const paragraphElement = screen.getByText(/1 task left/i);
 
-  expect(paragraphElement).toBeVisible();
-});
+//   expect(paragraphElement.textContent).toBe("1 task left");
+// });
 
-// eslint-disable-next-line jest/no-identical-title
-it("should render 'task' when the number of incomplete tasks is one", async () => {
-  render(<MockTodoFooter numberOfIncompleteTasks={1} />);
+// // eslint-disable-next-line jest/no-identical-title
+// it("should render 'task' when the number of incomplete tasks is one", async () => {
+//   render(<MockTodoFooter numberOfIncompleteTasks={1} />);
 
-  const paragraphElement = screen.getByText(/1 task left/i);
+//   const paragraphElement = screen.getByTestId('para');
 
-  expect(paragraphElement.textContent).toBe("1 task left");
-});
+//   expect(paragraphElement.textContent).toBe("1 task left");
+// });
