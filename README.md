@@ -34,7 +34,7 @@ test("renders learn react link", () => {});
 it("renders learn react link", () => {});
 ```
 
-2. in the test block we should tell what component are we testing and we are going to tell this by rendering the component if the actual DOM.
+2. in the test block we should tell what component are we testing and we are going to tell this by rendering the component in the actual DOM.
 
 ```js
 import { render, screen } from "@testing-library/react";
