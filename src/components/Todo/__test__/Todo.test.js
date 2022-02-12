@@ -11,6 +11,7 @@ const MockTodo = () => {
   );
 };
 
+// make a function that fireEvents for an array of todo items
 const addTask = (tasks) => {
   const inputElement = screen.getByPlaceholderText(/Add a new task here.../i);
   const buttonElement = screen.getByRole("button");
