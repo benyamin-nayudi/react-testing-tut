@@ -1,23 +1,22 @@
 const mockResponse = {
-    data: {
-        results: [
-            {
-                name: {
-                    first: "Laith",
-                    last: "Harb"
-                },
-                picture: {
-                    large: "https://randomuser.me/api/portraits/men/59.jpg"
-                },
-                login: {
-                    username: "ThePhonyGOAT"
-                }
-            }
-        ]
-    }
-}
-
+  data: {
+    results: [
+      {
+        name: {
+          first: "laith",
+          last: "harb",
+        },
+        picture: {
+          large: "https://randomuser.me/api/portraits/women/3.jpg",
+        },
+        login: {
+          username: "TheGoat",
+        },
+      },
+    ],
+  },
+};
 
 export default {
-    get: jest.fn().mockResolvedValue(mockResponse)
-}
+  get: jest.fn().mockResolvedValue(mockResponse),
+};
